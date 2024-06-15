@@ -4,13 +4,13 @@ import Image from "next/image";
 const Navbar = () => {
   return (
     <div>
-        <div className='p-5 bg-maroon flex text-white justify-between'>
+        <div className='px-10 pt-5 bg-maroon flex text-white justify-between w-screen'>
             <div>
                 <Image
                 src="/logo.svg"
                 alt="App Logo"
-                width={100}
-                height={24}
+                width={150}
+                height={36}
                 priority
                 />
             </div>
