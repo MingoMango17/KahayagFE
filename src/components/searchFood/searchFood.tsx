@@ -16,7 +16,7 @@ const SearchFood = ({
       className={`flex flex-col items-center p-5 rounded-lg cursor-pointer ${
         isHovered
           ? "bg-maroon text-white transform hover:scale-105 transition-all duration-300 ease-in-out"
-          : "bg-white text-black"
+          : "bg-transparent text-black"
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

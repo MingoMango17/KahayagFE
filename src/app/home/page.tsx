@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Caveat } from "next/font/google";
 import LandingCard from "@/components/landingcard/LandingCard";
 import SearchFood from "@/components/searchFood/searchFood";
-
+import FoodBoxes from "@/components/foodBoxes/foodBoxes";
 export const caveat = Caveat({
   subsets: ["latin"],
   variable: "--font-caveat",
@@ -12,7 +12,7 @@ export const caveat = Caveat({
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="bg-grayBG">
       <div className="bg-svg-background bg-no-repeat bg-cover bg-center w-screen h-[84vh]">
         <div className="flex justify-between p-10">
           <div className="w-max">
@@ -131,6 +131,29 @@ const HomePage = () => {
             expedita et laudantium excepturi. Quia obcaecati alias a sunt,
             magnam sint voluptate sequi
           </span>
+        </div>
+      </div>
+
+      <div className="flex justify-center items-center my-5">
+        <div className="flex flex-col items-center">
+          <FoodBoxes
+            title="Best deals"
+            orange="Crispy Chicken Sandwich"
+            subTitle="Fried chicken breast on a brioche bun with lettuce, tomato, pickles, and mayo. Buy one, get one 50% off."
+            imageURL="/foodBox1.svg"
+          />
+          <FoodBoxes
+            title="Relish a"
+            orange="Flaky Fish Treat"
+            subTitle="Breaded fish fillet on ciabatta with lettuce, tomato, tartar sauce, and lemon. Free drink with purchase."
+            imageURL="/foodBox2.svg"
+          />
+          <FoodBoxes
+            title="Enjoy a"
+            orange="Crunchy Veggie Bliss"
+            subTitle="Breaded portobello on whole grain bun with roasted peppers, avocado, lettuce, tomato, and mozzarella. 20% off on Tuesdays."
+            imageURL="/foodBox3.svg"
+          />
         </div>
       </div>
     </div>
