@@ -36,6 +36,7 @@ const config: Config = {
         maroon: "#A60221",
         pure: "#FFAE00",
         yellowOrange: "#F8A425",
+        grayText: "#616161",
       },
       textShadow: {
         sm: "0 1px 2px var(--tw-shadow-color)",
