@@ -32,14 +32,14 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-          <div>
+          <div className="ml-5"> 
             <Image
-              className="-translate-y-[4.5rem]"
+              className="-translate-y-[3.2rem] animate-rotate-clockwise drop-shadow-2xl mr-60"
               src="/ramen.svg"
               alt="ramen Logo"
               layout="responsive"
-              width={2000}
-              height={2000}
+              width={3000}
+              height={3000}
               priority
             />
           </div>
