@@ -4,6 +4,8 @@ import { Caveat } from "next/font/google";
 import LandingCard from "@/components/landingcard/LandingCard";
 import SearchFood from "@/components/searchFood/searchFood";
 import FoodBoxes from "@/components/foodBoxes/foodBoxes";
+import FoodBoxes2 from "@/components/foodBoxes/foodBoxes2";
+import Footer from "@/components/footer/footer";
 export const caveat = Caveat({
   subsets: ["latin"],
   variable: "--font-caveat",
@@ -142,7 +144,7 @@ const HomePage = () => {
             subTitle="Fried chicken breast on a brioche bun with lettuce, tomato, pickles, and mayo. Buy one, get one 50% off."
             imageURL="/foodBox1.svg"
           />
-          <FoodBoxes
+          <FoodBoxes2
             title="Relish a"
             orange="Flaky Fish Treat"
             subTitle="Breaded fish fillet on ciabatta with lettuce, tomato, tartar sauce, and lemon. Free drink with purchase."
@@ -155,6 +157,10 @@ const HomePage = () => {
             imageURL="/foodBox3.svg"
           />
         </div>
+      </div>
+
+      <div>
+          <Footer />
       </div>
     </div>
   );
