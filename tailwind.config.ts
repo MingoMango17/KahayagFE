@@ -36,9 +36,7 @@ const config: Config = {
         maroon: "#A60221",
         pure: "#FFAE00",
         yellowOrange: "#F8A425",
-        lightOrange: "#FFCE84",
         grayText: "#616161",
-        grayButton: "#D9D9D9",
         yellowFooter: "#FEAC01"
       },
       textShadow: {
