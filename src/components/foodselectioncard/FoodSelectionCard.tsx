@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 
 interface Params{
   name: string;
@@ -11,7 +10,7 @@ interface Params{
 function FoodSelectionCard({ name, desc, price, imgUrl}: Params) {
   return (
     <div className='relative overflow-hidden w-[400px] h-[280px] rounded-xl shadow-lg cursor-pointer group'>
-      <Image src={imgUrl} width={50} height={50} alt='food image' className='w-full h-48 object-cover' />
+      <img src={imgUrl} width={50} height={50} alt='food image' className='w-full h-48 object-cover' />
       
       <div className='flex justify-between p-5'>
         <div className='flex flex-col'>
