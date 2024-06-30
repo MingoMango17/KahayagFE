@@ -6,6 +6,7 @@ import SearchFood from "@/components/searchFood/searchFood";
 import FoodBoxes from "@/components/foodBoxes/foodBoxes";
 import FoodBoxes2 from "@/components/foodBoxes/foodBoxes2";
 import Footer from "@/components/footer/footer";
+import TopMenu from "@/components/topMenu/topMenu";
 export const caveat = Caveat({
   subsets: ["latin"],
   variable: "--font-caveat",
@@ -34,7 +35,7 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-          <div className="ml-5"> 
+          <div className="ml-5">
             <Image
               className="-translate-y-[3.2rem] animate-rotate-clockwise drop-shadow-2xl mr-60"
               src="/ramen.svg"
@@ -123,16 +124,33 @@ const HomePage = () => {
         <SearchFood imageUrl="/chowmein.svg" title="Chowmein" />
       </div>
 
-      <div className="flex justify-center mt-20">
-        <div className="flex flex-col text-center">
+      <div className="flex justify-center mt-20 bg-maroon text-white py-3">
+        <div className="flex flex-col text-center items-center">
           <div className={caveat.className}>
             <span className="text-6xl font-bold">Our Top 3 Menu</span>
           </div>
-          <span className="w-[50rem] text-center mt-5 font-thin">
+          <span className="w-[50rem] text-center mt-5 font-thin align">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident
             expedita et laudantium excepturi. Quia obcaecati alias a sunt,
             magnam sint voluptate sequi
           </span>
+          <div className="food-container flex flex-row py-5 gap-36">
+            <TopMenu
+              title="Porter House"
+              price="₱700.00"
+              imageURL="/topFood2.svg"
+            />
+            <TopMenu
+              title="Pork Silog"
+              price="₱250.00"
+              imageURL="/topFood1.svg"
+            />
+            <TopMenu
+              title="Filet Mignon"
+              price="₱520.00"
+              imageURL="/topFood3.svg"
+            />
+          </div>
         </div>
       </div>
 
@@ -160,7 +178,7 @@ const HomePage = () => {
       </div>
 
       <div>
-          <Footer />
+        <Footer />
       </div>
     </div>
   );
