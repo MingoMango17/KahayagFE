@@ -9,7 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.2.0",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "dotenv": "^16.4.5",
+    "framer-motion": "^11.2.12",
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.4",
     "next": "14.2.3",

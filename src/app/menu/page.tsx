@@ -1,9 +1,23 @@
+"use client";
 import Category from "@/components/category/Category";
 import FoodSelectionCard from "@/components/foodselectioncard/FoodSelectionCard";
 import PromoBanner from "@/components/promobanner/PromoBanner";
 import SearchBar from "@/components/searchbar/SearchBar";
 import Cart from "@/components/cart/Cart";
 import { notFound } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
+interface MenuItem {
+  name: string;
+  price: number;
+  available: boolean;
+  description: string; // Assuming you have a description field
+  imageURL: string;
+}
+
+interface Menu {
+  [category: string]: MenuItem[];
+}
 
 async function getMenu() {
   try {
@@ -23,26 +37,23 @@ async function getMenu() {
   }
 }
 
-async function logMenu() {
-  try {
-    const menuData = await getMenu();
-    const menu = menuData[0].menu; // Adjust based on your data structure
-
-    console.log("Menu:");
-
-    for (const category in menu) {
-      if (menu.hasOwnProperty(category)) {
-        console.log(`${category.charAt(0).toUpperCase() + category.slice(1)}:`);
-        console.log(JSON.stringify(menu[category], null, 2)); // This will log the full array
-      }
-    }
-  } catch (error) {
-    console.error("Error logging menu:", error);
-  }
-}
-
 const MenuPage = () => {
-  logMenu();
+  const [menu, setMenu] = useState<Menu>({});
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function getData() {
+      const menuData = await getMenu();
+      console.log("Menu Data", menuData[0].menu);
+      setMenu(menuData[0].menu);
+
+      setTimeout(() => {
+        setIsLoaded(true);
+      }, 1000);
+    }
+
+    getData();
+  }, []);
 
   return (
     <>
@@ -75,51 +86,21 @@ const MenuPage = () => {
       </div>
 
       <div className="px-10 py-5 h-[400px] overflow-y-scroll flex gap-5 flex-wrap md:justify-start">
-        <FoodSelectionCard
-          name="Foodpanda"
-          desc="lamian jud"
-          price={100}
-          imgUrl="/friend_chiken.png"
-        />
-        <FoodSelectionCard
-          name="Foodpanda"
-          desc="lamian jud"
-          price={100}
-          imgUrl="/friend_chiken.png"
-        />
-        <FoodSelectionCard
-          name="Foodpanda"
-          desc="lamian jud"
-          price={100}
-          imgUrl="/friend_chiken.png"
-        />
-        <FoodSelectionCard
-          name="Foodpanda"
-          desc="lamian jud"
-          price={100}
-          imgUrl="/friend_chiken.png"
-        />
-        <FoodSelectionCard
-          name="Foodpanda"
-          desc="lamian jud"
-          price={100}
-          imgUrl="/friend_chiken.png"
-        />
-        <FoodSelectionCard
-          name="Foodpanda"
-          desc="lamian jud"
-          price={100}
-          imgUrl="/friend_chiken.png"
-        />
-        <FoodSelectionCard
-          name="Foodpanda"
-          desc="lamian jud"
-          price={100}
-          imgUrl="/friend_chiken.png"
-        />
+        {Object.entries(menu).map(([category, items]) =>
+          (items as MenuItem[]).map((item: MenuItem) => (
+            <FoodSelectionCard
+              key={item.name} 
+              name={item.name}
+              desc={item.description}
+              price={item.price}
+              imgUrl={item.imageURL}
+              isLoaded={isLoaded}
+            />
+          ))
+        )}
       </div>
 
-      <div className="text-center">@Order Now</div>
+      {/* <div className="text-center">@Order Now</div> */}
 
       <Cart itemsCount={20} />
     </>

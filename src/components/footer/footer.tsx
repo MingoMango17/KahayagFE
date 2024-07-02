@@ -24,22 +24,22 @@ const Footer = () => {
         <div className="company-section text-white justify-center px-20 py-3 flex flex-row mt-3">
           <div className="flex flex-1 flex-col">
             <h1 className="text-xl font-bold pb-2">Company</h1>
-            <p className="text-gray-500 font-thin">About Us</p>
-            <p className="text-gray-500 font-thin">Team</p>
-            <p className="text-gray-500 font-thin">Careers</p>
-            <p className="text-gray-500 font-thin">Blog</p>
+            <p className="text-gray-500 font-thin text-xs">About Us</p>
+            <p className="text-gray-500 font-thin text-xs">Team</p>
+            <p className="text-gray-500 font-thin text-xs">Careers</p>
+            <p className="text-gray-500 font-thin text-xs">Blog</p>
           </div>
           <div className="flex flex-1 flex-col">
             <h1 className="text-xl font-bold pb-2">Contact</h1>
-            <p className="text-gray-500 font-thin">Help & Support</p>
-            <p className="text-gray-500 font-thin">Partner with us</p>
+            <p className="text-gray-500 font-thin text-xs">Help & Support</p>
+            <p className="text-gray-500 font-thin text-xs">Partner with us</p>
           </div>
           <div className="flex flex-1 flex-col">
             <h1 className="text-xl font-bold pb-2">Legal</h1>
-            <p className="text-gray-500 font-thin">Terms & Conditions</p>
-            <p className="text-gray-500 font-thin">Refund & Cancellation</p>
-            <p className="text-gray-500 font-thin">Privacy Policy</p>
-            <p className="text-gray-500 font-thin">Cookie Policy</p>
+            <p className="text-gray-500 font-thin text-xs">Terms & Conditions</p>
+            <p className="text-gray-500 font-thin text-xs">Refund & Cancellation</p>
+            <p className="text-gray-500 font-thin text-xs">Privacy Policy</p>
+            <p className="text-gray-500 font-thin text-xs">Cookie Policy</p>
           </div>
           <div className="flex flex-1 flex-col">
             <h1 className="text-base font-bold pb-2 text-gray-700">

@@ -5,7 +5,7 @@ import CategoryButton from "./CategoryButton";
 import { useState } from "react";
 
 function Category() {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const handleClick = (name: string) => {
     setSelectedCategory(name);
@@ -62,6 +62,12 @@ function Category() {
             name="Soups"
             imgUrl="/soup.svg"
             isSelected={selectedCategory === "Soups"}
+            onClick={handleClick}
+          />
+          <CategoryButton
+            name="Drinks"
+            imgUrl="/drink.svg"
+            isSelected={selectedCategory === "Drinks"}
             onClick={handleClick}
           />
         </div>
