@@ -117,11 +117,13 @@ const HomePage = () => {
           priority
           layout="responsive"
         /> */}
+        <SearchFood imageUrl="/noodles.svg" title="Tanghalian" />
+        <SearchFood imageUrl="/burger.svg" title="Dessert" />
         <SearchFood imageUrl="/pizza.svg" title="Pizza" />
-        <SearchFood imageUrl="/burger.svg" title="Burger" />
-        <SearchFood imageUrl="/noodles.svg" title="Noodles" />
-        <SearchFood imageUrl="/sandwich.svg" title="Sub-sandwich" />
-        <SearchFood imageUrl="/chowmein.svg" title="Chowmein" />
+        <SearchFood imageUrl="/sandwich.svg" title="Snacks" />
+        <SearchFood imageUrl="/chowmein.svg" title="Soups" />
+        <SearchFood imageUrl="/chowmein.svg" title="Drinks" />
+
       </div>
 
       <div className="flex justify-center mt-20 bg-maroon text-white py-3">
