@@ -16,9 +16,12 @@ const Navbar = () => {
           />
         </div>
         <div className="flex items-center justify-center font-bold">
-          <button className="mx-10 text-shadow-lg hover:text-[#FFAE00]">
-            <span className="text-shadow-sm">Home</span>
-          </button>
+          <Link href="/">
+            <button className="mx-10 text-shadow-lg hover:text-[#FFAE00]">
+              <span className="text-shadow-sm">Home</span>
+            </button>
+          </Link>
+
           <Link href="/menu">
             <button className="mx-10 hover:text-[#FFAE00]">Menu</button>
           </Link>
