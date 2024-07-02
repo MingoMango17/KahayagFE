@@ -28,7 +28,7 @@ function FoodSelectionCard({ name, desc, price, imgUrl, isLoaded }: Params) {
           <h1 className="font-bold font-sans text-lg">{name}</h1>
           <span className="font-light text-sm">{desc}</span>
         </div>
-        <p className="text-maroon">P{[price]}</p>
+        <p className="text-maroon font-bold">P{[price]}</p>
       </div>
 
       <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
