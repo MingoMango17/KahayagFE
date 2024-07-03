@@ -11,7 +11,7 @@ interface MenuItem {
   name: string;
   price: number;
   available: boolean;
-  description: string; // Assuming you have a description field
+  description: string;
   imageURL: string;
 }
 
@@ -38,8 +38,17 @@ async function getMenu() {
 }
 
 const MenuPage = () => {
-  const [menu, setMenu] = useState<Menu>({});
+  const [menu, setMenu] = useState<Menu>({}); // this is for the all section
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    // console.log("Menu", menu);
+
+
+  };
 
   useEffect(() => {
     async function getData() {
@@ -77,7 +86,10 @@ const MenuPage = () => {
       </div>
 
       <div className="px-10">
-        <Category />
+        <Category
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+        />
       </div>
 
       <div className="flex justify-between items-center mx-10 mt-7 pb-5 border-b-2">
@@ -86,18 +98,23 @@ const MenuPage = () => {
       </div>
 
       <div className="px-10 py-5 h-[400px] overflow-y-scroll flex gap-5 flex-wrap md:justify-start">
-        {Object.entries(menu).map(([category, items]) =>
-          (items as MenuItem[]).map((item: MenuItem) => (
-            <FoodSelectionCard
-              key={item.name} 
-              name={item.name}
-              desc={item.description}
-              price={item.price}
-              imgUrl={item.imageURL}
-              isLoaded={isLoaded}
-            />
-          ))
-        )}
+        {Object.entries(menu)
+          .filter(
+            ([category]) =>
+              selectedCategory === "all" || category === selectedCategory
+          )
+          .map(([category, items]) =>
+            items.map((item) => (
+              <FoodSelectionCard
+                key={item.name}
+                name={item.name}
+                desc={item.description}
+                price={item.price}
+                imgUrl={item.imageURL}
+                isLoaded={isLoaded}
+              />
+            ))
+          )}
       </div>
 
       {/* <div className="text-center">@Order Now</div> */}
