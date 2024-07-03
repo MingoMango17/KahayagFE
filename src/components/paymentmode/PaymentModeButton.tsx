@@ -1,9 +1,15 @@
-"use client"
+// "use client"
 
-import React, { useState } from 'react'
+// import React, { useState } from 'react'
 
-function PaymentModeButton() {
-  const [selectedModeOfPayment, setSelectedModeOfPayment] = useState('Cash')
+interface PaymentModeButtonProps{
+  selectedModeOfPayment: string,
+  setSelectedModeOfPayment: (mode:string) => void;
+
+}
+
+function PaymentModeButton({selectedModeOfPayment, setSelectedModeOfPayment}:PaymentModeButtonProps) {
+  // const [selectedModeOfPayment, setSelectedModeOfPayment] = useState('Cash')
 
   return (
     <div className='w-[300px] flex justify-center'>

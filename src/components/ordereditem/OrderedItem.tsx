@@ -41,7 +41,7 @@ function OrderedItem( {name, desc, quantity, price, imgUrl}: Params) {
 
         <div className='flex flex-col items-end w-2/4 p-2 '>
           <img src="/delete_icon.svg" alt="thrash" className='w-[30px] h-[30px] cursor-pointer'/>
-          <p className='text-gray-700 mt-10 font-semibold'>{price && 'P'+price}</p>
+          <p className='text-gray-700 mt-10 font-bold'>{price && 'P'+price}</p>
         </div>
       </div>
 
