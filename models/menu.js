@@ -1,6 +1,3 @@
-
-
-
 import mongoose, { Schema, model, models } from 'mongoose'
 
 const menuItemSchema = new Schema({
