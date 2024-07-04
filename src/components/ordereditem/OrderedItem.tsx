@@ -26,9 +26,9 @@ function OrderedItem( {name, desc, quantity, price, imgUrl}: Params) {
 
   return (
     <div className='flex w-[400px] h-auto shadow-md rounded-md overflow-hidden p-2 gap-3 items-center hover:bg-gray-100'>
-      <img src={imgUrl} alt="food pic" className='rounded-md h-[100px] flex items-center text-sm text-gray-500'/>
+      <img src={imgUrl} alt="food pic" className='rounded-md w-24 flex items-center text-sm text-gray-500 object-fill flex-1'/>
 
-      <div className='flex w-full '> 
+      <div className='flex w-full flex-1 '> 
         <div className='w-full p-2'>
           <h1 className='font-bold text-gray-700'>{name}</h1>
           <span className='text-gray-500'>{desc}</span>

@@ -1,12 +1,13 @@
 "use client";
-import React, { useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import OrderTypeButton from "@/components/ordertype/OrderTypeButton";
 import PaymentModeButton from "@/components/paymentmode/PaymentModeButton";
 import PaymentSummary from "@/components/paymentsummary/PaymentSummary";
 import OrderSummary from "@/components/ordersummary/OrderSummary";
 import OrderedItem from "@/components/ordereditem/OrderedItem";
 import { useCart } from "../../../context/CartContext";
-import { useToast } from '@chakra-ui/react'
+import { useToast } from "@chakra-ui/react";
+import QRCode from "react-qr-code";
 
 import {
   AlertDialog,
@@ -18,13 +19,19 @@ import {
   AlertDialogCloseButton,
   useDisclosure,
   Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 
-
 function generateOrderNumber(length: number): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const charactersLength = characters.length;
-  let result = '';
+  let result = "";
 
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -35,42 +42,44 @@ function generateOrderNumber(length: number): string {
 
 function page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [selectedOrderType, setSelectedOrderType] = useState("Dine In");
   const [selectedModeOfPayment, setSelectedModeOfPayment] = useState("Cash");
-  const { cartOrders,clearCart } = useCart();
+  const { cartOrders, clearCart } = useCart();
   const toast = useToast();
-  const [orderNumber, setOrderNumber] = useState('');
-
+  const [orderNumber, setOrderNumber] = useState("");
 
   useEffect(() => {
-    const generatedOrderNumber = generateOrderNumber(7); 
+    const generatedOrderNumber = generateOrderNumber(7);
     setOrderNumber(generatedOrderNumber);
-  }, []); 
+  }, []);
   const openCheckOut = () => {
     if (cartOrders.length === 0) {
-
       toast({
         title: `Cart is Empty`,
         status: "warning",
         isClosable: true,
         position: "top",
-        variant: "solid"
-      })
+        variant: "solid",
+      });
 
-
-      return; 
+      return;
     } else {
-      onOpen(); 
+      onOpen();
     }
   };
 
-  const handleCheckOut = ()=>{
-    
+  const handleCheckOut = () => {
     clearCart();
     onClose();
+    setIsModalOpen(true);
+  };
 
-  }
+  const onCloseModal = () => {
+    setIsModalOpen(false); // Close modal
+  };
 
   return (
     <>
@@ -183,6 +192,24 @@ function page() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <Modal isCentered onClose={onCloseModal} size="lg" isOpen={isModalOpen}>
+          <ModalOverlay
+            bg="none"
+            backdropFilter="auto"
+            // backdropInvert="80%"
+            backdropBlur="2px"
+          />
+          <ModalContent>
+            <ModalHeader>Modal Title</ModalHeader>
+            <ModalCloseButton />
+            <ModalFooter>
+              <Button onClick={onCloseModal} mr={3}>Close</Button>
+              <Button variant='outline' colorScheme="orange">Save QR</Button>
+
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </div>
     </>
   );
