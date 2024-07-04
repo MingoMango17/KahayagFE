@@ -7,9 +7,17 @@ interface Params {
   price: number;
   imgUrl: string;
   isLoaded: boolean;
+  onClick: () => void;
 }
 
-function FoodSelectionCard({ name, desc, price, imgUrl, isLoaded }: Params) {
+function FoodSelectionCard({
+  name,
+  desc,
+  price,
+  imgUrl,
+  isLoaded,
+  onClick,
+}: Params) {
   return (
     <Skeleton
       className="relative overflow-hidden w-[400px] h-[300px] rounded-xl shadow-lg cursor-pointer group"
@@ -32,7 +40,10 @@ function FoodSelectionCard({ name, desc, price, imgUrl, isLoaded }: Params) {
       </div>
 
       <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <button className="bg-white text-maroon border-maroon border-1 font-normal py-2 px-4 rounded-lg shadow-lg hover:bg-maroon hover:text-white">
+        <button
+          className="bg-white text-maroon border-maroon border-1 font-normal py-2 px-4 rounded-lg shadow-lg hover:bg-maroon hover:text-white"
+          onClick={onClick}
+        >
           Order Now
         </button>
       </div>
