@@ -7,7 +7,7 @@ import OrderSummary from "@/components/ordersummary/OrderSummary";
 import OrderedItem from "@/components/ordereditem/OrderedItem";
 import { useCart } from "../../../context/CartContext";
 import { useToast } from "@chakra-ui/react";
-import QRCode from "react-qr-code";
+import 'animate.css';
 
 import {
   AlertDialog,
@@ -25,6 +25,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalCloseButton,
+  Image,
 } from "@chakra-ui/react";
 
 function generateOrderNumber(length: number): string {
@@ -66,22 +67,23 @@ function page() {
   }, [cartOrders]);
 
   const openCheckOut = () => {
-    if (cartOrders.length === 0) {
-      toast({
-        title: `Cart is Empty`,
-        status: "warning",
-        isClosable: true,
-        position: "top",
-        variant: "solid",
-      });
-      return;
-    } else {
-      onOpen();
-    }
+    // if (cartOrders.length === 0) {
+    //   toast({
+    //     title: `Cart is Empty`,
+    //     status: "warning",
+    //     isClosable: true,
+    //     position: "top",
+    //     variant: "solid",
+    //   });
+    //   return;
+    // } else {
+    //   onOpen();
+    // }
+    onOpen();
   };
 
   const handleCheckOut = () => {
-    clearCart();
+    // clearCart();
     onClose();
     setIsModalOpen(true);
   };
@@ -144,7 +146,7 @@ function page() {
                   <li key={index}>
                     <OrderedItem
                       name={item.name}
-                      desc={item.description} // Replace with actual description property if available
+                      desc={item.description}
                       imgUrl={item.imageURL} // Replace with actual image URL property if available
                       price={item.subtotal}
                       quantity={item.quantity} // Adjust as per your logic for quantity
@@ -226,24 +228,38 @@ function page() {
           </AlertDialogContent>
         </AlertDialog>
 
-        <Modal isCentered onClose={onCloseModal} size="lg" isOpen={isModalOpen}>
-          <ModalOverlay
-            bg="none"
-            backdropFilter="auto"
-            // backdropInvert="80%"
-            backdropBlur="2px"
-          />
+        <Modal
+          isCentered
+          onClose={onCloseModal}
+          size="lg"
+          isOpen={isModalOpen}
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="7px" />
           <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
-            <ModalCloseButton />
-            <ModalFooter>
-              <Button onClick={onCloseModal} mr={3}>
-                Close
+            <div className="flex justify-center flex-col items-center gap-2 p-5">
+              <div className="flex justify-center items-center flex-col">
+                <div className="relative flex justify-center items-center w-[100px] h-[100] rounded-full bg-[#e0ffe5] animate__bounceIn">
+                  <Image
+                    src="/check.svg"
+                    alt="check mark"
+                    width={100}
+                    height={100}
+                    className="object-contain"
+                  />
+                </div>
+                <p className="text-center text-4xl font-bold mt-2">
+                  Order Successful!
+                </p>
+              </div>
+              <p className="text-center text-sm">
+                Your order has been received. Please show the QR code at the
+                counter.
+              </p>
+              <Button colorScheme="blue" size={"sm"} className="mt-2">
+                Proceed
               </Button>
-              <Button variant="outline" colorScheme="orange">
-                Save QR
-              </Button>
-            </ModalFooter>
+            </div>
           </ModalContent>
         </Modal>
       </div>
