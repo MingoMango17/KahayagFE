@@ -23,6 +23,22 @@ const menuItemSchema = new Schema({
     imageURL: {
         type: String,
         required: true
+    },
+    rating: {
+        type: Number,
+        default: 5.2
+    },
+    calories: {
+        type: Number,
+        default: 100
+    },
+    time: {
+        type: Number,
+        default: 10
+    },
+    history: {
+        type: String,
+        default: 'Sample History'
     }
 });
 

@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { HiShoppingCart } from "react-icons/hi";
 import { useCart } from "../../context/CartContext"
+import OrderDetails from "@/components/orderdetails/OrderDetails";
 
 interface MenuItem {
   name: string;
@@ -28,6 +29,10 @@ interface MenuItem {
   available: boolean;
   description: string;
   imageURL: string;
+  rating: number;
+  calories: number;
+  time: number;
+  history: string;
 }
 
 interface Menu {
@@ -98,22 +103,40 @@ const MenuPage = () => {
     }
   }
 
-  const handleAddToCart  = (selectedFood:MenuItem) =>{
+  const handleAddToCart = async (selectedFood: MenuItem) => {
     if (!toast.isActive(cartID)) {
       toast({
         id: cartID,
         title: 'Cart Updated',
-        description: `${selectedFood.name} has been added`, // Properly interpolate the selectedFood.name
-        position: "top",
+        description: `${selectedFood.name} has been added`,
+        position: 'top',
         isClosable: true,
         status: 'success',
       });
     }
-
-    addToCart(selectedFood);
-    // setCartOrders((prevCartOrders) => [...prevCartOrders, selectedFood]);
-  }
-
+  
+    addToCart(selectedFood); // Add to local cart state
+  
+    try {
+      const response = await fetch('http://localhost:3000/api/mycart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: [selectedFood] }), // Ensure selectedFood is sent as an array
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to add item to cart');
+      }
+  
+      // Handle success if needed
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+      // Handle error
+    }
+  };
+  
   useEffect(() => {
     async function getData() {
       const menuData = await getMenu();
@@ -196,118 +219,15 @@ const MenuPage = () => {
         <ModalContent>
           <ModalBody className="">
             {selectedFood ? (
-              <div className="block lg:flex gap-5 py-3">
-                <Image
-                  boxSize="400px"
-                  objectFit="cover"
-                  src={selectedFood.imageURL}
-                  alt="Food"
-                  borderRadius="lg"
-                  className="flex-1"
-                />
-
-                <div className="right-side flex-1">
-                  <h1 className="text-2xl font-bold text-center">
-                    {selectedFood.name}
-                  </h1>
-                  {/* <h1 className="font-bold text-maroon text-base text-center">P{selectedFood.price}.00</h1> */}
-
-                  <p className="mt-2 text-center font-semibold text-sm">
-                    {selectedFood.description}
-                  </p>
-                  <div className="other-info flex justify-between items-center font-bold mt-5 text-center">
-                    <div className="items-start text-yellowOrange ml-4">
-                      <p>Rating</p>
-                      <div className="flex-row flex gap-1 mt-2">
-                        <Image
-                          boxSize="17px"
-                          src="/star.svg"
-                          alt="star"
-                          objectFit="cover"
-                        />
-                        <p className="text-sm text-black">4.0</p>
-                      </div>
-                    </div>
-                    <div className="mx-auto text-maroon">
-                      <p>Calories</p>
-                      <div className="flex-row flex gap-1 mt-2">
-                        <Image
-                          boxSize="17px"
-                          src="/kcal.svg"
-                          alt="star"
-                          objectFit="cover"
-                        />
-                        <p className="text-sm text-black">300 kcal</p>
-                      </div>
-                    </div>
-                    <div className="items-end text-green-400 mr-4">
-                      <p className="">Time</p>
-                      <div className="flex-row flex gap-1 mt-2">
-                        <Image
-                          boxSize="17px"
-                          src="/clock.svg"
-                          alt="star"
-                          objectFit="cover"
-                        />
-                        <p className="text-sm  text-black">10 mins</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="history-section">
-                    <h1 className="text-xl font-bold text-start mt-4">
-                      History:
-                    </h1>
-                    <p className="text-sm text-justify pt-1">
-                      Crispy Pata, a beloved dish in Filipino cuisine, features
-                      a deep-fried pork leg renowned for its crispy exterior and
-                      tender interior. Originating in the Philippines, the dish
-                      involves marinating the pork leg with garlic, onion, bay
-                      leaves, and peppercorns before boiling until tender. After
-                      air-drying or refrigerating to remove moisture, the leg is
-                      deep-fried to achieve a golden, crunchy texture. Often
-                      served with a vinegar-based dipping sauce, Crispy Pata is
-                      cherished in Filipino households and restaurants worldwide
-                      for its rich flavors and cultural significance.
-                    </p>
-                  </div>
-                  <div className="total text-center mt-2 justify-between flex  items-center">
-                    <h1 className="font-bold text-base py-1">Sub-Total:</h1>
-                    <h1 className="font-bold text-maroon text-base text-end">
-                      P{subtotal}.00
-                    </h1>
-                  </div>
-                  <hr className="mt-2 border-t-2 border-dashed border-gray-300" />
-                  <div className="cartSection mt-3 flex flex-row gap-5 items-center justify-between">
-                    <div className="flex flex-row items-center gap-5">
-                      <button className="bg-maroon rounded-full text-white h-[30px] w-[30px] flex items-center justify-center font-bold" onClick={handleReduceQuantity}>
-                        -
-                      </button>
-
-                      <p className="text-xl font-bold">{orders}x</p>
-                      <button className="bg-maroon rounded-full text-white h-[30px] w-[30px] flex items-center justify-center font-bold" onClick={handleAddQuantity}>
-                        +
-                      </button>
-                    </div>
-
-                    <div className="items-end">
-                      <Button
-                        colorScheme="red"
-                        variant="outline"
-                        className="items-end"
-                        rightIcon={<HiShoppingCart />}
-                        onClick={() => {
-                          handleAddToCart(selectedFood)
-                        }}
-                      >
-                        Add To Cart
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                <ModalCloseButton className="ml-auto" />
-              </div>
+              <OrderDetails
+                selectedFood={selectedFood}
+                subtotal={subtotal}
+                orders={orders}
+                handleReduceQuantity={handleReduceQuantity}
+                handleAddQuantity={handleAddQuantity}
+                handleAddToCart={handleAddToCart}
+                onClose={onClose}
+              />
             ) : (
               "No food selected"
             )}
