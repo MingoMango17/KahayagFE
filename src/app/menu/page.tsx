@@ -20,7 +20,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { HiShoppingCart } from "react-icons/hi";
-import { useCart } from "../../context/CartContext"
+import { useCart } from "../../context/CartContext";
 import OrderDetails from "@/components/orderdetails/OrderDetails";
 
 interface MenuItem {
@@ -33,6 +33,8 @@ interface MenuItem {
   calories: number;
   time: number;
   history: string;
+  quantity: number;
+  subtotal: number;
 }
 
 interface Menu {
@@ -64,11 +66,9 @@ const MenuPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFood, setSelectedFood] = useState<MenuItem | null>(null);
   const [subtotal, setSubtotal] = useState<number>(0);
-  const [cartOrders, setCartOrders] = useState<MenuItem[]>([]);
   const toast = useToast();
-  const cartID = 'cart-toast'
+  const cartID = "cart-toast";
   const { addToCart } = useCart();
-
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -79,7 +79,7 @@ const MenuPage = () => {
   const handleCardClick = (foodItem: MenuItem) => {
     setSelectedFood(foodItem);
     setOrders(1);
-    setSubtotal(foodItem.price)
+    setSubtotal(foodItem.price);
     onOpen();
   };
 
@@ -92,32 +92,42 @@ const MenuPage = () => {
       setSubtotal(result * selectedFood.price);
     }
   };
-  
 
-  const handleAddQuantity = () =>{
-    const result = orders + 1
-    setOrders(result)
+  const handleAddQuantity = () => {
+    const result = orders + 1;
+    setOrders(result);
 
     if (selectedFood) {
       setSubtotal(result * selectedFood.price);
     }
-  }
+  };
 
-  const handleAddToCart  = (selectedFood:MenuItem) =>{
+  const handleAddToCart = (selectedFood: MenuItem) => {
+    const quantity = orders;
+    const newSubtotal = quantity * selectedFood.price;
+  
+    const foodWithAdditionalProps = {
+      ...selectedFood,
+      quantity,
+      subtotal: newSubtotal,
+    };
+  
     if (!toast.isActive(cartID)) {
       toast({
         id: cartID,
-        title: 'Cart Updated',
-        description: `${selectedFood.name} has been added`, // Properly interpolate the selectedFood.name
+        title: "Cart Updated",
+        description: `${selectedFood.name} has been added`,
         position: "top",
         isClosable: true,
-        status: 'success',
+        status: "success",
+        duration: 2000,
       });
     }
-
-    addToCart(selectedFood);
-    // setCartOrders((prevCartOrders) => [...prevCartOrders, selectedFood]);
-  }
+  
+    addToCart(foodWithAdditionalProps);
+    onClose();
+  };
+  
 
   useEffect(() => {
     async function getData() {
@@ -132,8 +142,6 @@ const MenuPage = () => {
 
     getData();
   }, []);
-
-  
 
   return (
     <>
@@ -150,7 +158,7 @@ const MenuPage = () => {
           <PromoBanner
             title="Not a Special Offer!"
             name="Marinated Worm"
-            desc="Once tasted always a drug addict muschroom si jake"
+            desc="Once tasted always a drug addict mushroom si jake"
             imgUrl="/frog.png"
           />
         </div>
@@ -189,7 +197,6 @@ const MenuPage = () => {
           )}
       </div>
 
-
       <Modal
         isCentered
         onClose={onClose}
@@ -217,8 +224,7 @@ const MenuPage = () => {
         </ModalContent>
       </Modal>
 
-      <Cart/>
-
+      <Cart />
     </>
   );
 };

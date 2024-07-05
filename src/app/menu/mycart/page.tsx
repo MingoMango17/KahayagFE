@@ -24,7 +24,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalFooter,
-  ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
 
@@ -47,14 +46,25 @@ function page() {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [selectedOrderType, setSelectedOrderType] = useState("Dine In");
   const [selectedModeOfPayment, setSelectedModeOfPayment] = useState("Cash");
-  const { cartOrders, clearCart } = useCart();
+  const { cartOrders, setCartOrders, clearCart } = useCart();
   const toast = useToast();
   const [orderNumber, setOrderNumber] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const generatedOrderNumber = generateOrderNumber(7);
     setOrderNumber(generatedOrderNumber);
   }, []);
+
+  useEffect(() => {
+    const calculateTotalPrice = () => {
+      const total = cartOrders.reduce((sum, item) => sum + item.subtotal, 0);
+      setTotalPrice(total);
+    };
+
+    calculateTotalPrice();
+  }, [cartOrders]);
+
   const openCheckOut = () => {
     if (cartOrders.length === 0) {
       toast({
@@ -64,7 +74,6 @@ function page() {
         position: "top",
         variant: "solid",
       });
-
       return;
     } else {
       onOpen();
@@ -81,9 +90,32 @@ function page() {
     setIsModalOpen(false); // Close modal
   };
 
+  const handleIncrement = (index: number) => {
+    const updatedOrders = [...cartOrders];
+    const item = updatedOrders[index];
+    item.quantity += 1;
+    item.subtotal = item.quantity * item.price;
+    setCartOrders(updatedOrders);
+  };
+
+  const handleDecrement = (index: number) => {
+    const updatedOrders = [...cartOrders];
+    const item = updatedOrders[index];
+    if (item.quantity > 1) {
+      item.quantity -= 1;
+      item.subtotal = item.quantity * item.price;
+      setCartOrders(updatedOrders);
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    const updatedOrders = cartOrders.filter((_, i) => i !== index);
+    setCartOrders(updatedOrders);
+  };
+
   return (
     <>
-      <div className="flex flex-col items-center  w-full pt-10">
+      <div className="flex flex-col items-center w-full pt-10">
         <div className="w-full text-center mt-5">
           <h1 className="font-extrabold text-2xl text-gray-800">My Cart</h1>
           <span className="font-semibold text-sm text-gray-700">
@@ -104,18 +136,21 @@ function page() {
             </div>
 
             <div className="mt-10 w-full h-[400px] flex items-center flex-col">
-              <h1 className="font-semibold text-gray-800 text-lg  text-center border-b-2 w-1/2 py-2">
+              <h1 className="font-semibold text-gray-800 text-lg text-center border-b-2 w-1/2 py-2">
                 Orders
               </h1>
               <ul className="w-3/4 h-full flex flex-col items-center gap-4 overflow-y-scroll">
-                {cartOrders.map((item) => (
-                  <li key={`${item.name}-${item.price}`}>
+                {cartOrders.map((item, index) => (
+                  <li key={index}>
                     <OrderedItem
                       name={item.name}
                       desc={item.description} // Replace with actual description property if available
                       imgUrl={item.imageURL} // Replace with actual image URL property if available
-                      price={item.price}
-                      quantity={1} // Adjust as per your logic for quantity
+                      price={item.subtotal}
+                      quantity={item.quantity} // Adjust as per your logic for quantity
+                      onIncrement={() => handleIncrement(index)}
+                      onDecrement={() => handleDecrement(index)}
+                      onDelete={() => handleDelete(index)}
                     />
                   </li>
                 ))}
@@ -139,10 +174,8 @@ function page() {
                 Payment Summary
               </h1>
               <PaymentSummary
-                totalQuantity={20}
-                subtotal={2}
-                discount={0}
-                total={300}
+                totalQuantity={cartOrders.length}
+                total={totalPrice}
               />
             </div>
 
@@ -152,9 +185,9 @@ function page() {
               </h1>
               <OrderSummary
                 orderType={selectedOrderType}
-                totalQuantity={20}
+                totalQuantity={cartOrders.length}
                 modeOfPayment={selectedModeOfPayment}
-                total={300}
+                total={totalPrice}
               />
             </div>
           </div>
@@ -204,9 +237,12 @@ function page() {
             <ModalHeader>Modal Title</ModalHeader>
             <ModalCloseButton />
             <ModalFooter>
-              <Button onClick={onCloseModal} mr={3}>Close</Button>
-              <Button variant='outline' colorScheme="orange">Save QR</Button>
-
+              <Button onClick={onCloseModal} mr={3}>
+                Close
+              </Button>
+              <Button variant="outline" colorScheme="orange">
+                Save QR
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
