@@ -103,40 +103,22 @@ const MenuPage = () => {
     }
   }
 
-  const handleAddToCart = async (selectedFood: MenuItem) => {
+  const handleAddToCart  = (selectedFood:MenuItem) =>{
     if (!toast.isActive(cartID)) {
       toast({
         id: cartID,
         title: 'Cart Updated',
-        description: `${selectedFood.name} has been added`,
-        position: 'top',
+        description: `${selectedFood.name} has been added`, // Properly interpolate the selectedFood.name
+        position: "top",
         isClosable: true,
         status: 'success',
       });
     }
-  
-    addToCart(selectedFood); // Add to local cart state
-  
-    try {
-      const response = await fetch('http://localhost:3000/api/mycart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ items: [selectedFood] }), // Ensure selectedFood is sent as an array
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to add item to cart');
-      }
-  
-      // Handle success if needed
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-      // Handle error
-    }
-  };
-  
+
+    addToCart(selectedFood);
+    // setCartOrders((prevCartOrders) => [...prevCartOrders, selectedFood]);
+  }
+
   useEffect(() => {
     async function getData() {
       const menuData = await getMenu();
