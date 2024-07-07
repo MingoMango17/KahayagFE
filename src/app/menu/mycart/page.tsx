@@ -152,7 +152,8 @@ function Page() {
               <h1 className="font-semibold text-gray-800 text-lg text-center border-b-2 w-1/2 py-2">
                 Orders
               </h1>
-              <ul className="w-3/4 h-full flex flex-col items-center gap-4 overflow-y-scroll">
+              
+              {cartOrders.length > 0 && <ul className="w-3/4 h-full flex flex-col items-center gap-4 overflow-y-scroll">
                 {cartOrders.map((item, index) => (
                   <li key={index}>
                     <OrderedItem
@@ -167,7 +168,15 @@ function Page() {
                     />
                   </li>
                 ))}
-              </ul>
+              </ul>}
+
+              {cartOrders.length == 0 && (
+                <>
+                <Image src='/empty_order.png' height={400} width={400} alt="empty cart"/>
+                <p className="mb-10 font-bold text-maroon text-xl">No Orders Yet. Go to the menu btch!</p>
+                </>
+                )}
+
             </div>
           </div>
 

@@ -7,7 +7,7 @@ function SearchBar() {
 
       <input type="text" placeholder="Search Here" className="bg-transparent outline-none text-gray-500 border-b-2 w-full ml-2 sm:ml-0"/>
 
-      <button className="bg-white py-2 rounded-3xl font-semibold text-gray-500 transition hover:bg-maroon hover:text-white duration-150 ease-in-out md:w-[100px] ">
+      <button className="bg-white p-2 px-3 rounded-3xl font-semibold text-gray-500 text-sm transition hover:bg-maroon hover:text-white duration-150 ease-in-out md:w-[100px] ">
         Search
       </button>
     </div>
