@@ -21,31 +21,31 @@ const Footer = () => {
             height={36}
           />
         </div>
-        <div className="company-section text-white justify-center px-20 py-3 flex flex-row mt-3">
-          <div className="flex flex-1 flex-col">
+        <div className="company-section text-white  justify-between  px-20 py-3 flex flex-col sm:flex-row gap-5 mt-3 ">
+          <div className="flex flex-1 flex-col items-center">
             <h1 className="text-xl font-bold pb-2">Company</h1>
             <p className="text-gray-500 font-thin text-xs">About Us</p>
             <p className="text-gray-500 font-thin text-xs">Team</p>
             <p className="text-gray-500 font-thin text-xs">Careers</p>
             <p className="text-gray-500 font-thin text-xs">Blog</p>
           </div>
-          <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col items-center">
             <h1 className="text-xl font-bold pb-2">Contact</h1>
             <p className="text-gray-500 font-thin text-xs">Help & Support</p>
             <p className="text-gray-500 font-thin text-xs">Partner with us</p>
           </div>
-          <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col items-center">
             <h1 className="text-xl font-bold pb-2">Legal</h1>
             <p className="text-gray-500 font-thin text-xs">Terms & Conditions</p>
             <p className="text-gray-500 font-thin text-xs">Refund & Cancellation</p>
             <p className="text-gray-500 font-thin text-xs">Privacy Policy</p>
             <p className="text-gray-500 font-thin text-xs">Cookie Policy</p>
           </div>
-          <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col items-center">
             <h1 className="text-base font-bold pb-2 text-gray-700">
               FOLLOW US
             </h1>
-            <div className="icons flex-row flex gap-5">
+            <div className="icons flex-row flex gap-2">
               <Image src="/insta.svg" alt="Insta Icon" width={21} height={21} />
               <Image src="/fb.svg" alt="Fb Icon" width={21} height={21} />
               <Image src="/twitter.svg" alt="X Icon" width={21} height={21} />
@@ -53,7 +53,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <p className="text-xs mt-5 text-grayText font-normal px-20">
+        <p className="text-xs mt-5 text-grayText font-normal text-center">
           © 2024 Kahayag. All rights reserved.
         </p>
       </div>

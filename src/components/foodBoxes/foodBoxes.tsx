@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 interface Params {
   title: string;
@@ -7,24 +8,32 @@ interface Params {
   imageURL: string;
 }
 
-const foodBoxes = ({ title, orange, subTitle, imageURL }: Params) => {
+const FoodBoxes = ({ title, orange, subTitle, imageURL }: Params) => {
   return (
-    <div className="bg-white flex rounded-lg drop-shadow-lg my-10 w-2/3">
-      <div className="flex flex-col flex-1 px-5 my-5">
-        <p className="text-3xl font-bold inline mr-2">{title}</p>
-        <p className="text-yellowOrange font-bold text-3xl inline">{orange}</p>
-        <p className="text-sm mt-2 text-grayText inline-block w-4/5">
-          {subTitle}
-        </p>
-        <button className="py-1 bg-pure text-white bg-gradient-to-r from-maroon to-yellowOrange font-bold mt-16 w-80">
-          Proceed to Order
-        </button>
+    <div className="bg-white flex rounded-lg overflow-hidden drop-shadow-lg w-3/4 h-auto " >
+      <div className="flex flex-col justify-between gap-3 p-5 w-full">
+        <div>
+          <p className="text-3xl font-bold">{title}</p>
+          <p className="text-yellowOrange font-bold text-3xl mt-5">{orange}</p>
+          <p className="text-sm mt-3 text-grayText w-4/5">{subTitle}</p>
+        </div>
+        <div className="mt-auto"> {/* This div pushes the button to the bottom */}
+          <button className="p-2 bg-pure text-white bg-gradient-to-r from-maroon to-yellowOrange font-bold w-full rounded-md">
+            Proceed to Order
+          </button>
+        </div>
       </div>
-      <div className="flex flex-1">
-        <img src={imageURL} alt="food" className=" object-cover" />
+      <div className="relative w-1/2">
+        <Image
+          src={imageURL}
+          alt="food"
+          className="object-cover h-full"
+          width={400}
+          height={500}
+        />
       </div>
     </div>
   );
 };
 
-export default foodBoxes;
+export default FoodBoxes;

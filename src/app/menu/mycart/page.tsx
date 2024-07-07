@@ -8,6 +8,7 @@ import OrderedItem from "@/components/ordereditem/OrderedItem";
 import { useCart } from "../../../context/CartContext";
 import { useToast } from "@chakra-ui/react";
 import "animate.css";
+
 import Link from "next/link";
 import {
   AlertDialog,
@@ -30,7 +31,7 @@ import {
   Badge,
   Divider,
 } from "@chakra-ui/react";
-import { link } from "fs";
+
 
 function generateOrderNumber(length: number): string {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -44,7 +45,7 @@ function generateOrderNumber(length: number): string {
   return result;
 }
 
-function page() {
+function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalCheckout, setModalCheckout] = useState(false);
@@ -361,4 +362,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

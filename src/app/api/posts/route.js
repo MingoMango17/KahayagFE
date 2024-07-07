@@ -7,7 +7,7 @@ import connectDB from "../../../../utils/db"
 export const GET = async (request) =>{
     try {
 
-        await connectDB();kjkj
+        await connectDB();
 
         const  menu = await Menu.find();
         return new NextResponse(JSON.stringify(menu),{status:200});

@@ -13,9 +13,9 @@ const SearchFood = ({
 
   return (
     <div
-      className={`flex flex-col items-center p-5 rounded-lg cursor-pointer ${
+      className={`flex flex-col items-center p-5 rounded-lg cursor-pointer border-2 shadow-md ${
         isHovered
-          ? "bg-maroon text-white transform hover:scale-105 transition-all duration-300 ease-in-out"
+          ? " text-black transform hover:scale-105 transition-all duration-300 ease-in-out"
           : "bg-transparent text-black"
       }`}
       onMouseEnter={() => setIsHovered(true)}
@@ -25,10 +25,10 @@ const SearchFood = ({
         src={imageUrl}
         width={200}
         height={200}
-        className="object-contain rounded-full"
+        className="object-contain rounded-full" 
         alt="search food"
       />
-      <p className="font-bold mt-2">{title}</p>
+      <p className="font-bold mt-2 ">{title}</p>
     </div>
   );
 };
