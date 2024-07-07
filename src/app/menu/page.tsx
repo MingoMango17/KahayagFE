@@ -6,6 +6,22 @@ import SearchBar from "@/components/searchbar/SearchBar";
 import Cart from "@/components/cart/Cart";
 import { notFound } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Button,
+  Image,
+  useToast,
+} from "@chakra-ui/react";
+import { HiShoppingCart } from "react-icons/hi";
+import { useCart } from "../../context/CartContext";
+import OrderDetails from "@/components/orderdetails/OrderDetails";
 
 interface MenuItem {
   name: string;
@@ -13,6 +29,12 @@ interface MenuItem {
   available: boolean;
   description: string;
   imageURL: string;
+  rating: number;
+  calories: number;
+  time: number;
+  history: string;
+  quantity: number;
+  subtotal: number;
 }
 
 interface Menu {
@@ -40,15 +62,72 @@ async function getMenu() {
 const MenuPage = () => {
   const [menu, setMenu] = useState<Menu>({}); // this is for the all section
   const [isLoaded, setIsLoaded] = useState(false);
-
+  const [orders, setOrders] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedFood, setSelectedFood] = useState<MenuItem | null>(null);
+  const [subtotal, setSubtotal] = useState<number>(0);
+  const toast = useToast();
+  const cartID = "cart-toast";
+  const { addToCart } = useCart();
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    // console.log("Menu", menu);
-
-
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleCardClick = (foodItem: MenuItem) => {
+    setSelectedFood(foodItem);
+    setOrders(1);
+    setSubtotal(foodItem.price);
+    onOpen();
+  };
+
+  const handleReduceQuantity = () => {
+    const result = orders - 1;
+    if (orders <= 1) return; // Ensure orders doesn't go below 1
+    setOrders(result);
+
+    if (selectedFood) {
+      setSubtotal(result * selectedFood.price);
+    }
+  };
+
+  const handleAddQuantity = () => {
+    const result = orders + 1;
+    setOrders(result);
+
+    if (selectedFood) {
+      setSubtotal(result * selectedFood.price);
+    }
+  };
+
+  const handleAddToCart = (selectedFood: MenuItem) => {
+    const quantity = orders;
+    const newSubtotal = quantity * selectedFood.price;
+  
+    const foodWithAdditionalProps = {
+      ...selectedFood,
+      quantity,
+      subtotal: newSubtotal,
+    };
+  
+    if (!toast.isActive(cartID)) {
+      toast({
+        id: cartID,
+        title: "Cart Updated",
+        description: `${selectedFood.name} has been added`,
+        position: "top",
+        isClosable: true,
+        status: "success",
+        duration: 2000,
+      });
+    }
+  
+    addToCart(foodWithAdditionalProps);
+    onClose();
+  };
+  
 
   useEffect(() => {
     async function getData() {
@@ -79,7 +158,7 @@ const MenuPage = () => {
           <PromoBanner
             title="Not a Special Offer!"
             name="Marinated Worm"
-            desc="Once tasted always a drug addict muschroom si jake"
+            desc="Once tasted always a drug addict mushroom si jake"
             imgUrl="/frog.png"
           />
         </div>
@@ -112,14 +191,40 @@ const MenuPage = () => {
                 price={item.price}
                 imgUrl={item.imageURL}
                 isLoaded={isLoaded}
+                onClick={() => handleCardClick(item)}
               />
             ))
           )}
       </div>
 
-      {/* <div className="text-center">@Order Now</div> */}
+      <Modal
+        isCentered
+        onClose={onClose}
+        isOpen={isOpen}
+        motionPreset="slideInBottom"
+        size="4xl"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody className="">
+            {selectedFood ? (
+              <OrderDetails
+                selectedFood={selectedFood}
+                subtotal={subtotal}
+                orders={orders}
+                handleReduceQuantity={handleReduceQuantity}
+                handleAddQuantity={handleAddQuantity}
+                handleAddToCart={handleAddToCart}
+                onClose={onClose}
+              />
+            ) : (
+              "No food selected"
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
-      <Cart itemsCount={20} />
+      <Cart />
     </>
   );
 };

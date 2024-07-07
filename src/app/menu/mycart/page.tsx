@@ -1,11 +1,14 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import OrderTypeButton from "@/components/ordertype/OrderTypeButton";
 import PaymentModeButton from "@/components/paymentmode/PaymentModeButton";
 import PaymentSummary from "@/components/paymentsummary/PaymentSummary";
 import OrderSummary from "@/components/ordersummary/OrderSummary";
 import OrderedItem from "@/components/ordereditem/OrderedItem";
-
+import { useCart } from "../../../context/CartContext";
+import { useToast } from "@chakra-ui/react";
+import "animate.css";
+import Link from "next/link";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -16,21 +19,119 @@ import {
   AlertDialogCloseButton,
   useDisclosure,
   Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalCloseButton,
+  ModalBody,
+  Image,
+  Badge,
+  Divider,
 } from "@chakra-ui/react";
+import { link } from "fs";
+
+function generateOrderNumber(length: number): string {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const charactersLength = characters.length;
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+
+  return result;
+}
 
 function page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalCheckout, setModalCheckout] = useState(false);
+
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [selectedOrderType, setSelectedOrderType] = useState("Dine In");
   const [selectedModeOfPayment, setSelectedModeOfPayment] = useState("Cash");
+  const { cartOrders, setCartOrders, clearCart } = useCart();
+  const toast = useToast();
+  const [orderNumber, setOrderNumber] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    const generatedOrderNumber = generateOrderNumber(7);
+    setOrderNumber(generatedOrderNumber);
+  }, []);
+
+  useEffect(() => {
+    const calculateTotalPrice = () => {
+      const total = cartOrders.reduce((sum, item) => sum + item.subtotal, 0);
+      setTotalPrice(total);
+    };
+
+    calculateTotalPrice();
+  }, [cartOrders]);
+
+  const openCheckOut = () => {
+    if (cartOrders.length === 0) {
+      toast({
+        title: `Cart is Empty`,
+        status: "warning",
+        isClosable: true,
+        position: "top",
+        variant: "solid",
+      });
+      return;
+    } else {
+      onOpen();
+    }
+    onOpen();
+  };
+
+  const handleCheckOut = () => {
+    // clearCart();
+    onClose();
+    setIsModalOpen(true);
+  };
+
+  const handleProceed = () => {
+    setModalCheckout(true);
+    onCloseModal();
+  };
+
+  const onCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleIncrement = (index: number) => {
+    const updatedOrders = [...cartOrders];
+    const item = updatedOrders[index];
+    item.quantity += 1;
+    item.subtotal = item.quantity * item.price;
+    setCartOrders(updatedOrders);
+  };
+
+  const handleDecrement = (index: number) => {
+    const updatedOrders = [...cartOrders];
+    const item = updatedOrders[index];
+    if (item.quantity > 1) {
+      item.quantity -= 1;
+      item.subtotal = item.quantity * item.price;
+      setCartOrders(updatedOrders);
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    const updatedOrders = cartOrders.filter((_, i) => i !== index);
+    setCartOrders(updatedOrders);
+  };
 
   return (
     <>
-      <div className="flex flex-col items-center  w-full pt-10">
+      <div className="flex flex-col items-center w-full pt-10">
         <div className="w-full text-center mt-5">
           <h1 className="font-extrabold text-2xl text-gray-800">My Cart</h1>
-          <span className="font-extralight text-sm text-gray-400">
-            Id Number: 0100010
+          <span className="font-semibold text-sm text-gray-700">
+            Order Number: {orderNumber}
           </span>
         </div>
 
@@ -47,55 +148,24 @@ function page() {
             </div>
 
             <div className="mt-10 w-full h-[400px] flex items-center flex-col">
-              <h1 className="font-semibold text-gray-800 text-lg  text-center border-b-2 w-1/2 py-2">
+              <h1 className="font-semibold text-gray-800 text-lg text-center border-b-2 w-1/2 py-2">
                 Orders
               </h1>
               <ul className="w-3/4 h-full flex flex-col items-center gap-4 overflow-y-scroll">
-                <li>
-                  <OrderedItem
-                    name="tae soup"
-                    desc="Hot paper soup"
-                    imgUrl="/noodles.svg"
-                    price={100}
-                    quantity={5}
-                  />
-                </li>
-                <li>
-                  <OrderedItem
-                    name="tae soup"
-                    desc="Hot paper soup"
-                    imgUrl="/noodles.svg"
-                    price={100}
-                    quantity={5}
-                  />
-                </li>
-                <li>
-                  <OrderedItem
-                    name="tae soup"
-                    desc="Hot paper soup"
-                    imgUrl="/noodles.svg"
-                    price={100}
-                    quantity={5}
-                  />
-                </li>
-                <li>
-                  <OrderedItem
-                    name="tae soup"
-                    desc="Hot paper soup"
-                    imgUrl="/noodles.svg"
-                    price={100}
-                    quantity={5}
-                  />
-                </li>
-                <li>
-                  <OrderedItem
-                    name="tae soup"
-                    desc="Hot paper soup"
-                    imgUrl="/noodles.svg"
-                    price={100}
-                    quantity={5}
-                  />
-                </li>
+                {cartOrders.map((item, index) => (
+                  <li key={index}>
+                    <OrderedItem
+                      name={item.name}
+                      desc={item.description}
+                      imgUrl={item.imageURL} // Replace with actual image URL property if available
+                      price={item.subtotal}
+                      quantity={item.quantity} // Adjust as per your logic for quantity
+                      onIncrement={() => handleIncrement(index)}
+                      onDecrement={() => handleDecrement(index)}
+                      onDelete={() => handleDelete(index)}
+                    />
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -116,10 +186,8 @@ function page() {
                 Payment Summary
               </h1>
               <PaymentSummary
-                totalQuantity={20}
-                subtotal={2}
-                discount={0}
-                total={300}
+                totalQuantity={cartOrders.length}
+                total={totalPrice}
               />
             </div>
 
@@ -129,9 +197,9 @@ function page() {
               </h1>
               <OrderSummary
                 orderType={selectedOrderType}
-                totalQuantity={20}
+                totalQuantity={cartOrders.length}
                 modeOfPayment={selectedModeOfPayment}
-                total={300}
+                total={totalPrice}
               />
             </div>
           </div>
@@ -139,7 +207,7 @@ function page() {
 
         <button
           className="bg-maroon w-[400px] mt-10 mb-5 p-2 rounded-full font-bold text-white shadow-lg transform hover:scale-105 duration-100 ease-in"
-          onClick={onOpen}
+          onClick={openCheckOut}
         >
           Checkout
         </button>
@@ -163,12 +231,131 @@ function page() {
               <Button ref={cancelRef} onClick={onClose}>
                 No
               </Button>
-              <Button colorScheme="red" ml={3}>
+              <Button colorScheme="red" ml={3} onClick={handleCheckOut}>
                 Yes
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* modal for confirmation */}
+        <Modal
+          isCentered
+          onClose={onCloseModal}
+          size="xl"
+          isOpen={isModalOpen}
+          closeOnOverlayClick={false}
+        >
+          <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="7px" />
+          <ModalContent>
+            <div className="flex justify-center flex-col items-center gap-2 p-5">
+              <div className="flex justify-center items-center flex-col">
+                <div className="relative flex justify-center items-center w-[100px] h-[100] rounded-full bg-[#e0ffe5] animate__bounceIn">
+                  <Image
+                    src="/check.svg"
+                    alt="check mark"
+                    width={100}
+                    height={100}
+                    className="object-contain"
+                  />
+                </div>
+                <p className="text-center text-xl font-bold mt-2">
+                  Order Successful!
+                </p>
+              </div>
+              <p className="text-center text-sm">
+                Your order has been received. Please show the QR code at the
+                counter.
+              </p>
+              <Button
+                colorScheme="blue"
+                size={"sm"}
+                className="mt-2"
+                onClick={handleProceed}
+                loadingText="Submitting"
+                // isLoading
+              >
+                Submit
+              </Button>
+            </div>
+          </ModalContent>
+        </Modal>
+
+        {/* for checkout */}
+        <Modal isOpen={modalCheckout} onClose={onClose} isCentered size="3xl">
+          <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="7px" />
+          <ModalContent>
+            <div className="flex flex-row p-7">
+              <div className="flex-1">
+                <h1 className="font-extrabold text-xl text-center">
+                  Your orders have been sent to the counter
+                </h1>
+                <h1 className="text-xs font-bold py-4">ORDER SUMMARY:</h1>
+
+                <div className="order-summary py-2 flex flex-row">
+                  <Badge>1x</Badge>
+                  <p className="text-xs text-center mx-auto font-medium">
+                    Crispy Fried Chicken
+                  </p>
+                  <p className="text-xs ml-auto font-medium">Php 50.00</p>
+                </div>
+
+                <div className="order-summary py-2 flex flex-row">
+                  <Badge>1x</Badge>
+                  <p className="text-xs text-center mx-auto font-medium">
+                    Crispy Fried Chicken
+                  </p>
+                  <p className="text-xs ml-auto font-medium">Php 50.00</p>
+                </div>
+
+                <div className="order-summary py-2 flex flex-row">
+                  <Badge>1x</Badge>
+                  <p className="text-xs text-center mx-auto font-medium">
+                    Crispy Fried Chicken
+                  </p>
+                  <p className="text-xs ml-auto font-medium">Php 50.00</p>
+                </div>
+
+                <Divider
+                  orientation="horizontal"
+                  backgroundColor="red.500"
+                  height="2px"
+                />
+
+                <div className="flex flex-row mt-3">
+                  <h1 className="text-xs font-bold">TOTAL</h1>
+                  <p className="text-xs ml-auto font-bold">Php 150.00</p>
+                </div>
+
+                <div className="mt-4 flex justify-center">
+                  <Link href="/">
+                  <Button colorScheme="gray" variant="solid" size="sm">
+                    Done
+                  </Button>
+                  </Link>
+                 
+                </div>
+              </div>
+
+              <div className="flex-1 flex justify-center items-center">
+                <Image
+                  src="/sampleQR.svg"
+                  alt="sampleQR"
+                  // width={100}
+                  // height={150} // Added height to ensure the image scales correctly
+                  className="object-contain"
+                />
+              </div>
+            </div>
+            {/* 
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant='ghost'>Secondary Action</Button>
+          </ModalFooter> */}
+          </ModalContent>
+        </Modal>
       </div>
     </>
   );
