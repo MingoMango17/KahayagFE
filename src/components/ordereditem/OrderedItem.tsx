@@ -15,7 +15,7 @@ interface Params {
 
 function OrderedItem({ name, desc, quantity, price, imgUrl, onIncrement, onDecrement, onDelete }: Params) {
   return (
-    <div className='flex w-[400px] h-auto shadow-md rounded-md overflow-hidden p-2 gap-3 items-center hover:bg-gray-100'>
+    <div className='flex w-full h-auto shadow-md rounded-md overflow-hidden p-2 gap-3 items-center hover:bg-gray-100'>
       <img src={imgUrl} alt="food pic" className='rounded-md w-24 flex items-center text-sm text-gray-500 object-fill flex-1' />
 
       <div className='flex w-full flex-1'>

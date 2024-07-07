@@ -32,6 +32,16 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
+// interface MenuItem {
+//   id: number;
+//   name: string;
+//   description: string;
+//   quantity: number;
+//   price: number;
+//   subtotal: number;
+//   imageURL: string;
+// }
+
 
 function generateOrderNumber(length: number): string {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -49,14 +59,14 @@ function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalCheckout, setModalCheckout] = useState(false);
+  const [orderNumber, setOrderNumber] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedOrderType, setSelectedOrderType] = useState("Dine In");
 
   const cancelRef = useRef<HTMLButtonElement>(null);
-  const [selectedOrderType, setSelectedOrderType] = useState("Dine In");
   const [selectedModeOfPayment, setSelectedModeOfPayment] = useState("Cash");
   const { cartOrders, setCartOrders, clearCart } = useCart();
   const toast = useToast();
-  const [orderNumber, setOrderNumber] = useState("");
-  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const generatedOrderNumber = generateOrderNumber(7);
@@ -126,6 +136,12 @@ function Page() {
     setCartOrders(updatedOrders);
   };
 
+  const handleFinishedOrders = () =>{
+    //finish orders must be saved including the order type, mode of payment, and the corresponding QR code
+    //it can be accessed by the admin and the users as well
+    console.log("save the finished orders");
+  }
+
   return (
     <>
       <div className="flex flex-col items-center w-full pt-10">
@@ -152,7 +168,7 @@ function Page() {
               <h1 className="font-semibold text-gray-800 text-lg text-center border-b-2 w-1/2 py-2">
                 Orders
               </h1>
-              
+
               {cartOrders.length > 0 && <ul className="w-3/4 h-full flex flex-col items-center gap-4 overflow-y-scroll">
                 {cartOrders.map((item, index) => (
                   <li key={index}>
@@ -301,29 +317,19 @@ function Page() {
                   Your orders have been sent to the counter
                 </h1>
                 <h1 className="text-xs font-bold py-4">ORDER SUMMARY:</h1>
-
-                <div className="order-summary py-2 flex flex-row">
-                  <Badge>1x</Badge>
-                  <p className="text-xs text-center mx-auto font-medium">
-                    Crispy Fried Chicken
-                  </p>
-                  <p className="text-xs ml-auto font-medium">Php 50.00</p>
-                </div>
-
-                <div className="order-summary py-2 flex flex-row">
-                  <Badge>1x</Badge>
-                  <p className="text-xs text-center mx-auto font-medium">
-                    Crispy Fried Chicken
-                  </p>
-                  <p className="text-xs ml-auto font-medium">Php 50.00</p>
-                </div>
-
-                <div className="order-summary py-2 flex flex-row">
-                  <Badge>1x</Badge>
-                  <p className="text-xs text-center mx-auto font-medium">
-                    Crispy Fried Chicken
-                  </p>
-                  <p className="text-xs ml-auto font-medium">Php 50.00</p>
+                
+                <div>
+                  {cartOrders.map((order, index)=>{
+                      return (
+                        <div className="order-summary py-2 flex flex-row" key={index}>
+                          <Badge>{order.quantity}x</Badge>
+                          <p className="text-xs text-center mx-auto font-medium">
+                            {order.name}
+                          </p>
+                          <p className="text-xs ml-auto font-medium">Php {order.subtotal}.00</p>
+                        </div>
+                      )
+                  })}
                 </div>
 
                 <Divider
@@ -334,12 +340,12 @@ function Page() {
 
                 <div className="flex flex-row mt-3">
                   <h1 className="text-xs font-bold">TOTAL</h1>
-                  <p className="text-xs ml-auto font-bold">Php 150.00</p>
+                  <p className="text-xs ml-auto font-bold">Php {totalPrice}.00</p>
                 </div>
 
                 <div className="mt-4 flex justify-center">
                   <Link href="/">
-                  <Button colorScheme="gray" variant="solid" size="sm">
+                  <Button colorScheme="gray" variant="solid" size="sm" onClick={()=> handleFinishedOrders()}>
                     Done
                   </Button>
                   </Link>
