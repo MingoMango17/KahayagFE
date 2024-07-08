@@ -30,9 +30,9 @@ const Navbar = () => {
           <Link href="/menu">
             <button className="mx-10 hover:text-[#FFAE00]">Menu</button>
           </Link>
-          <button className="mx-10 hover:text-[#FFAE00]">Special Offers</button>
+          <button className="mx-10 hover:text-[#FFAE00]">About Us</button>
           <button className="mx-10 mr-20 hover:text-[#FFAE00]">
-            Contact Us
+            Contact
           </button>
         </div>
       </div>

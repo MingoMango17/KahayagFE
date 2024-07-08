@@ -156,7 +156,7 @@ function Page() {
     sound.play();
   };
 
-  const handleFinishedOrders = () => {
+  const handleFinishedOrders = async () => {
     const orderData = {
       orders: cartOrders.map((order) => ({
         quantity: order.quantity,
@@ -169,8 +169,27 @@ function Page() {
       orderID: orderNumber,
     };
 
-    console.log(orderData); // You can replace this with your save logic
-    clearCart();
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (response.ok) {
+        console.log("Order saved successfully");
+        clearCart();
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to save order:", errorData.error);
+      }
+    } catch (error) {
+      console.error("Error saving order:", error);
+    }
+    // console.log(orderData); // You can replace this with your save logic
+    // clearCart();
   };
 
   return (
