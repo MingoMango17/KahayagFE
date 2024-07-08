@@ -59,26 +59,33 @@ const HomePage = () => {
         </div>
 
         <div className="flex flex-col items-center md:flex-row md:justify-between gap-5 w-full px-10">
-            <LandingCard
-              title="Browse and Select"
-              desc="Discover dishes, customize and add to cart"
-              imageUrl="/landingCard1.svg"
-            />
-            <LandingCard
-              title="Place order"
-              desc="Confirm choices and receive order confirmation"
-              imageUrl="/landingCard2.svg"
-            />
-            <LandingCard
-              title="Pickup with QR Code"
-              desc="Show QR code at counter to pay and for quick pickup"
-              imageUrl="/landingCard3.svg"
-            />
+          <LandingCard
+            title="Browse and Select"
+            desc="Discover dishes, customize and add to cart"
+            imageUrl="/landingCard1.svg"
+          />
+          <LandingCard
+            title="Place order"
+            desc="Confirm choices and receive order confirmation"
+            imageUrl="/landingCard2.svg"
+          />
+          <LandingCard
+            title="Pickup with QR Code"
+            desc="Show QR code at counter to pay and for quick pickup"
+            imageUrl="/landingCard3.svg"
+          />
         </div>
       </div>
 
       <div className="flex gap-2 mt-5 w-full p-5">
-        <Image src="/chef.svg" alt="Chef" width={300} height={500} priority className="w-[200px] md:w-[600px]" />
+        <Image
+          src="/chef.svg"
+          alt="Chef"
+          width={300}
+          height={500}
+          priority
+          className="w-[200px] md:w-[600px]"
+        />
         <div className="w-full flex flex-col justify-center">
           <div className={caveat.className}>
             <span className="text-8xl md:text-9xl">A</span>
@@ -104,45 +111,47 @@ const HomePage = () => {
           <span className="text-8xl md:text-9xl">S</span>
           <span className="text-5xl md:text-7xl">earch by food</span>
         </div>
-        <Link className="cursor-pointer hover:underline" href="#">View All </Link>
+        <Link className="cursor-pointer hover:underline" href="#">
+          View All
+        </Link>
       </div>
 
-      <div className=" grid grid-cols-2 md:grid-cols-3 lg:flex gap-4 w-full p-10">
+      <div className="flex flex-wrap justify-center gap-4 w-full p-10 items-center ">
         <SearchFood imageUrl="/noodles.svg" title="Tanghalian" />
         <SearchFood imageUrl="/burger.svg" title="Dessert" />
         <SearchFood imageUrl="/pizza.svg" title="Pizza" />
         <SearchFood imageUrl="/sandwich.svg" title="Snacks" />
         <SearchFood imageUrl="/chowmein.svg" title="Soups" />
-        <SearchFood imageUrl="/chowmein.svg" title="Drinks" />
       </div>
 
       <div className="flex flex-col justify-center items-center mt-10 bg-maroon text-white p-5 w-full cursor-pointer">
-          <span className={`text-6xl font-bold ${caveat.className}`}>Our Top 3 Menu</span>
-          <span className=" md:w-[50rem] text-center mt-5 font-thin text-sm">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident
-            expedita et laudantium excepturi. Quia obcaecati alias a sunt,
-            magnam sint voluptate sequi
-          </span>
-          <div className="food-container flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-row py-5 gap-2 ">
+        <span className={`text-6xl font-bold ${caveat.className}`}>
+          Our Top 3 Menu
+        </span>
+        <span className=" md:w-[50rem] text-center mt-5 font-thin text-sm">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident
+          expedita et laudantium excepturi. Quia obcaecati alias a sunt, magnam
+          sint voluptate sequi
+        </span>
+        <div className="food-container flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-row py-5 gap-2 ">
+          <TopMenu
+            title="Porter House"
+            price="₱700.00"
+            imageURL="/topFood2.svg"
+          />
+          <TopMenu
+            title="Pork Silog"
+            price="₱250.00"
+            imageURL="/topFood1.svg"
+          />
+          <div className="flex justify-center md:col-span-2 lg:col-span-auto">
             <TopMenu
-              title="Porter House"
-              price="₱700.00"
-              imageURL="/topFood2.svg"
+              title="Filet Mignon"
+              price="₱520.00"
+              imageURL="/topFood3.svg"
             />
-            <TopMenu
-              title="Pork Silog"
-              price="₱250.00"
-              imageURL="/topFood1.svg"
-            />
-            <div className="flex justify-center md:col-span-2 lg:col-span-auto">
-              <TopMenu
-                title="Filet Mignon"
-                price="₱520.00"
-                imageURL="/topFood3.svg"
-              />
-            </div>
+          </div>
         </div>
-
       </div>
 
       <div className="flex justify-center items-center my-5 w-full h-auto">

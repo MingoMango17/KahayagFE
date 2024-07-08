@@ -23,10 +23,10 @@ const foodBoxes = ({ title, orange, subTitle, imageURL }: Params) => {
       <div className="flex flex-col justify-between p-5 w-full">
         <div>
           <p className="text-3xl font-bold">{title}</p>
-          <p className="text-yellowOrange font-bold text-3xl mt-5">{orange}</p>
+          <p className="text-yellowOrange font-bold text-3xl">{orange}</p>
           <p className="text-sm mt-3 text-grayText w-4/5">{subTitle}</p>
         </div>
-        <div className="mt-auto"> {/* This div pushes the button to the bottom */}
+        <div className="mt-2">
           <button className="p-2 bg-pure text-white bg-gradient-to-r from-maroon to-yellowOrange font-bold w-full rounded-md">
             Proceed to Order
           </button>
