@@ -13,7 +13,7 @@ const SearchFood = ({
 
   return (
     <div
-      className={`flex flex-col items-center p-5 rounded-lg cursor-pointer border-2 shadow-md ${
+      className={`flex flex-col items-center p-5 rounded-lg cursor-pointer border-2 shadow-md items-center${
         isHovered
           ? " text-black transform hover:scale-105 transition-all duration-300 ease-in-out"
           : "bg-transparent text-black"

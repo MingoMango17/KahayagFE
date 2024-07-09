@@ -8,6 +8,8 @@ import OrderedItem from "@/components/ordereditem/OrderedItem";
 import { useCart } from "../../../context/CartContext";
 import { useToast } from "@chakra-ui/react";
 import "animate.css";
+import QRCode from "qrcode";
+import { Howl, Howler } from "howler";
 
 import Link from "next/link";
 import {
@@ -42,7 +44,6 @@ import {
 //   imageURL: string;
 // }
 
-
 function generateOrderNumber(length: number): string {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const charactersLength = characters.length;
@@ -62,6 +63,7 @@ function Page() {
   const [orderNumber, setOrderNumber] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedOrderType, setSelectedOrderType] = useState("Dine In");
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
 
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [selectedModeOfPayment, setSelectedModeOfPayment] = useState("Cash");
@@ -82,6 +84,16 @@ function Page() {
     calculateTotalPrice();
   }, [cartOrders]);
 
+  useEffect(() => {
+    QRCode.toDataURL(orderNumber, { width: 300 }, (error, url) => {
+      if (error) {
+        console.error(error);
+      } else {
+        setQrCodeUrl(url);
+      }
+    });
+  }, [orderNumber]);
+
   const openCheckOut = () => {
     if (cartOrders.length === 0) {
       toast({
@@ -99,9 +111,9 @@ function Page() {
   };
 
   const handleCheckOut = () => {
-    // clearCart();
     onClose();
     setIsModalOpen(true);
+    playSound();
   };
 
   const handleProceed = () => {
@@ -136,11 +148,49 @@ function Page() {
     setCartOrders(updatedOrders);
   };
 
-  const handleFinishedOrders = () =>{
-    //finish orders must be saved including the order type, mode of payment, and the corresponding QR code
-    //it can be accessed by the admin and the users as well
-    console.log("save the finished orders");
-  }
+  const playSound = () => {
+    const sound = new Howl({
+      src: ["/orderSound.mp3"],
+    });
+
+    sound.play();
+  };
+
+  const handleFinishedOrders = async () => {
+    const orderData = {
+      orders: cartOrders.map((order) => ({
+        quantity: order.quantity,
+        name: order.name,
+        subtotal: order.subtotal,
+      })),
+      orderType: selectedOrderType,
+      paymentMode: selectedModeOfPayment,
+      totalPrice: totalPrice,
+      orderID: orderNumber,
+    };
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (response.ok) {
+        console.log("Order saved successfully");
+        clearCart();
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to save order:", errorData.error);
+      }
+    } catch (error) {
+      console.error("Error saving order:", error);
+    }
+    // console.log(orderData); // You can replace this with your save logic
+    // clearCart();
+  };
 
   return (
     <>
@@ -169,30 +219,39 @@ function Page() {
                 Orders
               </h1>
 
-              {cartOrders.length > 0 && <ul className="w-3/4 h-full flex flex-col items-center gap-4 overflow-y-scroll">
-                {cartOrders.map((item, index) => (
-                  <li key={index}>
-                    <OrderedItem
-                      name={item.name}
-                      desc={item.description}
-                      imgUrl={item.imageURL} // Replace with actual image URL property if available
-                      price={item.subtotal}
-                      quantity={item.quantity} // Adjust as per your logic for quantity
-                      onIncrement={() => handleIncrement(index)}
-                      onDecrement={() => handleDecrement(index)}
-                      onDelete={() => handleDelete(index)}
-                    />
-                  </li>
-                ))}
-              </ul>}
+              {cartOrders.length > 0 && (
+                <ul className="w-3/4 h-full flex flex-col items-center gap-4 overflow-y-scroll">
+                  {cartOrders.map((item, index) => (
+                    <li key={index}>
+                      <OrderedItem
+                        name={item.name}
+                        desc={item.description}
+                        imgUrl={item.imageURL} // Replace with actual image URL property if available
+                        price={item.subtotal}
+                        quantity={item.quantity} // Adjust as per your logic for quantity
+                        onIncrement={() => handleIncrement(index)}
+                        onDecrement={() => handleDecrement(index)}
+                        onDelete={() => handleDelete(index)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               {cartOrders.length == 0 && (
                 <>
-                <Image src='/empty_order.png' height={400} width={400} alt="empty cart"/>
-                <p className="mb-10 font-bold text-maroon text-xl">No Orders Yet. Go to the menu btch!</p>
+                  <Image
+                    src="/empty_cart.png"
+                    height={300}
+                    width={300}
+                    alt="empty cart"
+                    className="mt-5"
+                  />
+                  <p className="mb-10 font-bold text-maroon text-xl mt-2">
+                    No Orders Yet. Go to the menu!
+                  </p>
                 </>
-                )}
-
+              )}
             </div>
           </div>
 
@@ -207,7 +266,7 @@ function Page() {
               />
             </div>
 
-            <div className="flex items-center flex-col w-full mt-10">
+            {/* <div className="flex items-center flex-col w-full mt-10">
               <h1 className="font-semibold text-gray-800 text-lg mb-1">
                 Payment Summary
               </h1>
@@ -215,7 +274,7 @@ function Page() {
                 totalQuantity={cartOrders.length}
                 total={totalPrice}
               />
-            </div>
+            </div> */}
 
             <div className="flex items-center flex-col w-full mt-10">
               <h1 className="font-semibold text-gray-800 text-lg">
@@ -290,8 +349,7 @@ function Page() {
                 </p>
               </div>
               <p className="text-center text-sm">
-                Your order has been received. Please show the QR code at the
-                counter.
+                Ready to submit. Please show the QR code at the counter.
               </p>
               <Button
                 colorScheme="blue"
@@ -317,18 +375,23 @@ function Page() {
                   Your orders have been sent to the counter
                 </h1>
                 <h1 className="text-xs font-bold py-4">ORDER SUMMARY:</h1>
-                
+
                 <div>
-                  {cartOrders.map((order, index)=>{
-                      return (
-                        <div className="order-summary py-2 flex flex-row" key={index}>
-                          <Badge>{order.quantity}x</Badge>
-                          <p className="text-xs text-center mx-auto font-medium">
-                            {order.name}
-                          </p>
-                          <p className="text-xs ml-auto font-medium">Php {order.subtotal}.00</p>
-                        </div>
-                      )
+                  {cartOrders.map((order, index) => {
+                    return (
+                      <div
+                        className="order-summary py-2 flex flex-row"
+                        key={index}
+                      >
+                        <Badge>{order.quantity}x</Badge>
+                        <p className="text-xs text-center mx-auto font-medium">
+                          {order.name}
+                        </p>
+                        <p className="text-xs ml-auto font-medium">
+                          Php {order.subtotal}.00
+                        </p>
+                      </div>
+                    );
                   })}
                 </div>
 
@@ -339,37 +402,50 @@ function Page() {
                 />
 
                 <div className="flex flex-row mt-3">
+                  <h1 className="text-xs font-bold">Type of Order</h1>
+                  <p className="text-xs ml-auto font-bold">
+                    {selectedOrderType}
+                  </p>
+                </div>
+                <div className="flex flex-row mt-3">
+                  <h1 className="text-xs font-bold">Payment</h1>
+                  <p className="text-xs ml-auto font-bold">
+                    {selectedModeOfPayment}
+                  </p>
+                </div>
+                <div className="flex flex-row mt-3">
                   <h1 className="text-xs font-bold">TOTAL</h1>
-                  <p className="text-xs ml-auto font-bold">Php {totalPrice}.00</p>
+                  <p className="text-xs ml-auto font-bold">
+                    Php {totalPrice}.00
+                  </p>
                 </div>
 
                 <div className="mt-4 flex justify-center">
                   <Link href="/">
-                  <Button colorScheme="gray" variant="solid" size="sm" onClick={()=> handleFinishedOrders()}>
-                    Done
-                  </Button>
+                    <Button
+                      colorScheme="gray"
+                      variant="solid"
+                      size="sm"
+                      onClick={() => handleFinishedOrders()}
+                    >
+                      Done
+                    </Button>
                   </Link>
-                 
                 </div>
               </div>
 
               <div className="flex-1 flex justify-center items-center">
-                <Image
-                  src="/sampleQR.svg"
-                  alt="sampleQR"
-                  // width={100}
-                  // height={150} // Added height to ensure the image scales correctly
-                  className="object-contain"
-                />
+                {qrCodeUrl ? (
+                  <img
+                    src={qrCodeUrl}
+                    alt="QR Code"
+                    className="object-contain"
+                  />
+                ) : (
+                  "Generating QR Code..."
+                )}
               </div>
             </div>
-            {/* 
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant='ghost'>Secondary Action</Button>
-          </ModalFooter> */}
           </ModalContent>
         </Modal>
       </div>
