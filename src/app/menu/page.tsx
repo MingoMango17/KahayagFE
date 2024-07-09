@@ -22,6 +22,7 @@ import {
 import { HiShoppingCart } from "react-icons/hi";
 import { useCart } from "../../context/CartContext";
 import OrderDetails from "@/components/orderdetails/OrderDetails";
+import SlideShow from '@/components/slideShow/SlideShow'
 
 interface MenuItem {
   name: string;
@@ -63,9 +64,9 @@ const MenuPage = () => {
   const [menu, setMenu] = useState<Menu>({}); // this is for the all section
   const [isLoaded, setIsLoaded] = useState(false);
   const [orders, setOrders] = useState<number>(1);
+  const [subtotal, setSubtotal] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedFood, setSelectedFood] = useState<MenuItem | null>(null);
-  const [subtotal, setSubtotal] = useState<number>(0);
   const toast = useToast();
   const cartID = "cart-toast";
   const { addToCart } = useCart();
@@ -134,37 +135,43 @@ const MenuPage = () => {
       const menuData = await getMenu();
       console.log("Menu Data", menuData[0].menu);
       setMenu(menuData[0].menu);
-
-      setTimeout(() => {
-        setIsLoaded(true);
-      }, 1000);
+      setIsLoaded(true);
     }
 
     getData();
   }, []);
 
+  const getRandomItem = () =>{
+    // Select 6 random items
+    const allItems = Object.values(menu).flat();
+    const shuffledItems = allItems.sort(() => Math.random() - 0.5);
+    const selectedItems = shuffledItems.slice(0, 6);
+    return selectedItems;
+  }
+
+  const randomItems = getRandomItem()
+  console.log("Random Items", randomItems)
   return (
     <>
-      <div className="flex gap-2 h-[250px] items-center justify-center overflow-x-hidden">
-        <div>
-          <PromoBanner
-            title="Special Offer!"
-            name="Marinated Frog"
-            desc="The only delicacy that is not poisonous or whatsoever"
-            imgUrl="/frog.png"
-          />
-        </div>
-        <div className="hidden lg:block">
-          <PromoBanner
-            title="Not a Special Offer!"
-            name="Marinated Worm"
-            desc="Once tasted always a drug addict mushroom si jake"
-            imgUrl="/frog.png"
-          />
-        </div>
+      <div className="h-auto flex items-center justify-center overflow-x-hidden w-full mt-2">
+        <SlideShow>
+          {randomItems.map((item, index) => {
+            return (
+              <PromoBanner
+                key={index}
+                title="Weekend Special!"
+                name={item.name}
+                desc={item.description}
+                imgUrl={item.imageURL}
+                onClick={() => handleCardClick(item)}
+              />
+            )
+          })}
+          </SlideShow>
+
       </div>
 
-      <div className="px-10">
+      <div className="px-10 w-full">
         <Category
           selectedCategory={selectedCategory}
           onCategoryChange={handleCategoryChange}

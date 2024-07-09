@@ -20,7 +20,7 @@ const foodBoxes = ({ title, orange, subTitle, imageURL }: Params) => {
           height={500}
         />
       </div>
-      <div className="flex flex-col justify-between p-5 w-full">
+      <div className="flex flex-col justify-between p-5 w-full gap-2">
         <div>
           <p className="text-3xl font-bold">{title}</p>
           <p className="text-yellowOrange font-bold text-3xl mt-5">{orange}</p>
