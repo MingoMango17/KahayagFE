@@ -157,6 +157,8 @@ function Page() {
   };
 
   const handleFinishedOrders = async () => {
+    const now = new Date();
+
     const orderData = {
       orders: cartOrders.map((order) => ({
         quantity: order.quantity,
@@ -167,6 +169,8 @@ function Page() {
       paymentMode: selectedModeOfPayment,
       totalPrice: totalPrice,
       orderID: orderNumber,
+      date: now.toISOString().split('T')[0], // Extract date (YYYY-MM-DD)
+      time: now.toTimeString().split(' ')[0], // Extract time (HH:MM:SS)
     };
 
     try {

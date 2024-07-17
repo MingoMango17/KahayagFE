@@ -10,19 +10,22 @@ import {
 const Contact = () => {
   return (
     <div className="main-container ml-auto mr-auto flex flex-col lg:flex-row mt-20">
-      <div className="left-side flex-1 px-16 flex flex-col justify-center items-center mb-10 lg:mb-0">
+      <div className="left-side flex-1 px-16 flex flex-col py-10 lg:mb-0">
         <div>
-          <div className="">
+          <div className="mt-6">
             <h1 className="text-5xl font-bold">Contact Us</h1>
+            <div className="py-3">
             <p className="text-gray-600 text-sm my-3">
               Email, call, or complete the form to learn how Kahayag can solve
               your inquiry
             </p>
             <p className="text-gray-600 my-2 text-sm">kahayag_ph@gmail.com</p>
             <p className="text-gray-600 text-sm">321-221-231</p>
+            </div>
+           
           </div>
 
-          <div className="mt-8 flex flex-row gap-10">
+          <div className="mt-5 flex flex-row gap-10">
             <div>
               <h1 className="font-bold">Customer Support</h1>
               <p className="text-sm">

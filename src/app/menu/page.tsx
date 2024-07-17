@@ -18,11 +18,12 @@ import {
   Button,
   Image,
   useToast,
+  Skeleton,
 } from "@chakra-ui/react";
 import { HiShoppingCart } from "react-icons/hi";
 import { useCart } from "../../context/CartContext";
 import OrderDetails from "@/components/orderdetails/OrderDetails";
-import SlideShow from '@/components/slideShow/SlideShow'
+import SlideShow from "@/components/slideShow/SlideShow";
 
 interface MenuItem {
   name: string;
@@ -106,13 +107,13 @@ const MenuPage = () => {
   const handleAddToCart = (selectedFood: MenuItem) => {
     const quantity = orders;
     const newSubtotal = quantity * selectedFood.price;
-  
+
     const foodWithAdditionalProps = {
       ...selectedFood,
       quantity,
       subtotal: newSubtotal,
     };
-  
+
     if (!toast.isActive(cartID)) {
       toast({
         id: cartID,
@@ -124,51 +125,63 @@ const MenuPage = () => {
         duration: 2000,
       });
     }
-  
+
     addToCart(foodWithAdditionalProps);
     onClose();
   };
-  
 
   useEffect(() => {
+
+    let timeoutID:NodeJS.Timeout;
+
     async function getData() {
       const menuData = await getMenu();
       console.log("Menu Data", menuData[0].menu);
       setMenu(menuData[0].menu);
-      setIsLoaded(true);
+
+      timeoutID = setTimeout(() => {
+        setIsLoaded(true);
+      }, 3000);
+
+      // setIsLoaded(true);
     }
 
     getData();
+
+    return () => clearTimeout(timeoutID);
   }, []);
 
-  const getRandomItem = () =>{
+  const getRandomItem = () => {
     // Select 6 random items
     const allItems = Object.values(menu).flat();
     const shuffledItems = allItems.sort(() => Math.random() - 0.5);
     const selectedItems = shuffledItems.slice(0, 6);
     return selectedItems;
-  }
+  };
 
-  const randomItems = getRandomItem()
-  console.log("Random Items", randomItems)
+  const randomItems = getRandomItem();
   return (
     <>
-      <div className="h-auto flex items-center justify-center overflow-x-hidden w-full mt-2">
-        <SlideShow>
-          {randomItems.map((item, index) => {
-            return (
-              <PromoBanner
-                key={index}
-                title="Weekend Special!"
-                name={item.name}
-                desc={item.description}
-                imgUrl={item.imageURL}
-                onClick={() => handleCardClick(item)}
-              />
-            )
-          })}
+      <div className="h-auto flex items-center justify-center overflow-x-hidden w-full p-4 ">
+        <Skeleton
+          className="relative w-full h-full overflow-hidden"
+          isLoaded={isLoaded}
+        >
+          <SlideShow>
+            {randomItems.map((item, index) => {
+              return (
+                <PromoBanner
+                  key={index}
+                  title="Weekend Special!"
+                  name={item.name}
+                  desc={item.description}
+                  imgUrl={item.imageURL}
+                  onClick={() => handleCardClick(item)}
+                />
+              );
+            })}
           </SlideShow>
-
+        </Skeleton>
       </div>
 
       <div className="px-10 w-full">

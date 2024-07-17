@@ -87,7 +87,7 @@ const Category: React.FC<CategoryProps> = ({ onCategoryChange, selectedCategory 
 
   return (
     <div className="flex flex-col gap-2 select-none w-full">
-      <div className="font-bold text-lg text-gray-800">
+      <div className="font-bold text-lg text-gray-800 mt-5">
         <h1>Select Category</h1>
       </div>
 
